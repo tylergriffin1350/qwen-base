@@ -165,6 +165,35 @@ function install(isGlobal) {
     }
   }
 
+  // Wire BASE Python hooks into settings.json
+  const settingsPath = path.join(qwenDir, 'settings.json');
+  let settings = {};
+  if (fs.existsSync(settingsPath)) {
+    try { settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8')); } catch (e) {}
+  }
+  if (!settings.hooks) settings.hooks = {};
+
+  const hookFiles = [
+    { event: 'UserPromptSubmit', file: 'base-pulse-check.py' },
+    { event: 'UserPromptSubmit', file: 'psmm-injector.py' },
+    { event: 'SessionStart', file: 'satellite-detection.py' },
+  ];
+
+  for (const hook of hookFiles) {
+    const hookPath = path.join(baseDest, 'hooks', hook.file).replace(/\\/g, '/');
+    const hookCommand = `python3 ${hookPath}`;
+    if (!settings.hooks[hook.event]) settings.hooks[hook.event] = [];
+    const exists = settings.hooks[hook.event].some(h =>
+      (h.command && h.command.includes(hook.file)) ||
+      (h.hooks && h.hooks.some(i => i.command && i.command.includes(hook.file)))
+    );
+    if (!exists) {
+      settings.hooks[hook.event].push({ hooks: [{ type: 'command', command: hookCommand }] });
+    }
+  }
+  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+  console.log(`  ${green}+${reset} Wired BASE hooks in settings.json`);
+
   console.log(`
   ${green}Done!${reset} Open Qwen Code and type ${cyan}/base${reset} to start.
 `);
