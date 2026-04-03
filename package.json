@@ -1,6 +1,6 @@
 {
   "name": "qwen-base",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Builder's Automated State Engine — workspace lifecycle management for Qwen Code",
   "bin": {
     "qwen-base": "bin/install.js"

@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const readline = require('readline');
+const { execSync } = require('child_process');
 
 const green = '\x1b[32m';
 const cyan = '\x1b[36m';
@@ -30,7 +31,6 @@ const args = process.argv.slice(2);
 const hasGlobal = args.includes('--global') || args.includes('-g');
 const hasLocal = args.includes('--local') || args.includes('-l');
 const hasHelp = args.includes('--help') || args.includes('-h');
-const skipTools = args.includes('--skip-tools');
 
 function parseConfigDirArg() {
   const idx = args.findIndex(arg => arg === '--config-dir' || arg === '-c');
@@ -76,6 +76,18 @@ function countFiles(dir) {
   return count;
 }
 
+function wireMcp(workspaceDir, mcpIndexPath) {
+  const mcpJsonPath = path.join(workspaceDir, '.mcp.json');
+  let mcpConfig = {};
+  if (fs.existsSync(mcpJsonPath)) {
+    try { mcpConfig = JSON.parse(fs.readFileSync(mcpJsonPath, 'utf8')); } catch (e) {}
+  }
+  if (!mcpConfig.mcpServers) mcpConfig.mcpServers = {};
+  const normalizedPath = mcpIndexPath.replace(/\\/g, '/');
+  mcpConfig.mcpServers['base-mcp'] = { command: 'node', args: [normalizedPath], type: 'stdio' };
+  fs.writeFileSync(mcpJsonPath, JSON.stringify(mcpConfig, null, 2));
+}
+
 console.log(banner);
 
 if (hasHelp) {
@@ -85,7 +97,6 @@ if (hasHelp) {
     ${cyan}-g, --global${reset}              Install globally (to Qwen config directory)
     ${cyan}-l, --local${reset}               Install locally (to ./.qwen/ in current directory)
     ${cyan}-c, --config-dir <path>${reset}   Specify custom Qwen config directory
-    ${cyan}--skip-tools${reset}              Skip OSS analysis tool installation
     ${cyan}-h, --help${reset}                Show this help message
 
   ${yellow}Examples:${reset}
@@ -98,6 +109,7 @@ if (hasHelp) {
   ${yellow}What gets installed:${reset}
     ${cyan}commands/qwen-base/${reset}       11 slash commands
     ${cyan}base/                            Framework (core, transform, domains, schemas, rules, tools)
+    ${cyan}.mcp.json                        base-mcp server registration
 `);
   process.exit(0);
 }
@@ -107,26 +119,27 @@ function install(isGlobal) {
   const configDir = expandTilde(explicitConfigDir) || expandTilde(process.env.QWEN_CONFIG_DIR);
   const globalDir = configDir || path.join(os.homedir(), '.qwen');
   const qwenDir = isGlobal ? globalDir : path.join(process.cwd(), '.qwen');
-  const aegisDest = path.join(qwenDir, 'aegis');
+  const baseDest = path.join(qwenDir, 'base');
   const cmdsDest = path.join(qwenDir, 'commands', 'qwen-base');
+  const workspaceRoot = isGlobal ? os.homedir() : process.cwd();
 
   const locationLabel = isGlobal
     ? qwenDir.replace(os.homedir(), '~')
     : qwenDir.replace(process.cwd(), '.');
 
-  if (fs.existsSync(aegisDest) || fs.existsSync(cmdsDest)) {
+  if (fs.existsSync(baseDest) || fs.existsSync(cmdsDest)) {
     console.log(`  ${yellow}Existing installation found at ${locationLabel}${reset}`);
     console.log(`  Updating...`);
-    if (fs.existsSync(aegisDest)) fs.rmSync(aegisDest, { recursive: true, force: true });
+    if (fs.existsSync(baseDest)) fs.rmSync(baseDest, { recursive: true, force: true });
     if (fs.existsSync(cmdsDest)) fs.rmSync(cmdsDest, { recursive: true, force: true });
   }
 
   console.log(`  Installing to ${cyan}${locationLabel}${reset}\n`);
 
-  // Copy framework (note: BASE uses 'src/' structure)
+  // Copy framework (src/ → base/)
   if (fs.existsSync(path.join(src, 'src'))) {
-    copyDir(path.join(src, 'src'), path.join(qwenDir, 'base'));
-    console.log(`  ${green}+${reset} base/ ${dim}(${countFiles(path.join(qwenDir, 'base'))} framework files)${reset}`);
+    copyDir(path.join(src, 'src'), baseDest);
+    console.log(`  ${green}+${reset} base/ ${dim}(${countFiles(baseDest)} framework files)${reset}`);
   }
 
   // Copy commands
@@ -134,6 +147,22 @@ function install(isGlobal) {
     fs.mkdirSync(cmdsDest, { recursive: true });
     copyDir(path.join(src, 'src', 'commands'), cmdsDest);
     console.log(`  ${green}+${reset} commands/qwen-base/ ${dim}(${countFiles(cmdsDest)} commands)${reset}`);
+  }
+
+  // Wire BASE MCP server into .mcp.json
+  const mcpIndexPath = path.join(baseDest, 'packages', 'base-mcp', 'index.js');
+  if (fs.existsSync(mcpIndexPath)) {
+    wireMcp(workspaceRoot, mcpIndexPath);
+    console.log(`  ${green}+${reset} Wired base-mcp in .mcp.json`);
+
+    // Install MCP dependencies
+    const mcpDir = path.join(baseDest, 'packages', 'base-mcp');
+    try {
+      execSync('npm install --production --silent', { cwd: mcpDir, stdio: 'pipe' });
+      console.log(`  ${green}+${reset} MCP dependencies installed`);
+    } catch (e) {
+      console.log(`  ${yellow}!${reset} MCP deps install failed — run cd ${mcpDir} && npm install${reset}`);
+    }
   }
 
   console.log(`
