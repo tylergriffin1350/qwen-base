@@ -1,0 +1,42 @@
+{
+  "name": "qwen-base",
+  "version": "1.0.0",
+  "description": "Builder's Automated State Engine — workspace lifecycle management for Qwen Code",
+  "bin": {
+    "qwen-base": "bin/install.js"
+  },
+  "files": [
+    "bin",
+    "src/skill",
+    "src/framework",
+    "src/commands",
+    "src/hooks",
+    "src/templates",
+    "src/packages",
+    "README.md"
+  ],
+  "keywords": [
+    "qwen",
+    "qwen-code",
+    "qwen-cli",
+    "ai",
+    "workspace",
+    "state-management",
+    "base",
+    "maintenance",
+    "drift-detection"
+  ],
+  "author": "Chris Kahler (adapted for Qwen by tylergriffin1350)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tylergriffin1350/qwen-base.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tylergriffin1350/qwen-base/issues"
+  },
+  "homepage": "https://github.com/tylergriffin1350/qwen-base#readme",
+  "engines": {
+    "node": ">=16.7.0"
+  }
+}
