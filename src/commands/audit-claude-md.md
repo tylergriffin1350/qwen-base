@@ -1,13 +1,13 @@
 ---
 name: base:audit-claude-md
-description: Audit CLAUDE.md against the CLAUDE.md Strategy and generate a compliant version
+description: Audit QWEN.md against the QWEN.md Strategy and generate a compliant version
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 <objective>
-Audit the project's CLAUDE.md for strategy compliance, interactively rewrite it section by section, and route operational rules to CARL or an artifact.
+Audit the project's QWEN.md for strategy compliance, interactively rewrite it section by section, and route operational rules to CARL or an artifact.
 
-**When to use:** "audit claude md", "check my claude.md", "rewrite my claude.md", after major workspace changes.
+**When to use:** "audit claude md", "check my QWEN.md", "rewrite my QWEN.md", after major workspace changes.
 </objective>
 
 <execution_context>
@@ -19,18 +19,18 @@ Audit the project's CLAUDE.md for strategy compliance, interactively rewrite it 
 <context>
 $ARGUMENTS
 
-@CLAUDE.md
+@QWEN.md
 </context>
 
 <process>
 Follow task: @{~/.qwen/commands/qwen-base/tasks/audit-claude-md.md}
 
 Key gates (do NOT skip):
-1. Load strategy + template BEFORE reading user's CLAUDE.md
+1. Load strategy + template BEFORE reading user's QWEN.md
 2. Present full audit classification — wait for user approval
 3. Detect CARL — wait for user decision on rule routing
 4. Propose each section individually — wait for approval per section
-5. Write to CLAUDE.base.md (never overwrite CLAUDE.md)
+5. Write to CLAUDE.base.md (never overwrite QWEN.md)
 </process>
 
 <success_criteria>
@@ -40,5 +40,5 @@ Key gates (do NOT skip):
 - [ ] CARL detection completed, rule routing decided
 - [ ] Each section approved individually
 - [ ] Final CLAUDE.base.md under 100 lines
-- [ ] Original CLAUDE.md untouched
+- [ ] Original QWEN.md untouched
 </success_criteria>

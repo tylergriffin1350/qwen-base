@@ -70,7 +70,7 @@ For details on any item, use base_get_item("{SURFACE_NAME}", id)."""
 
 
 def main():
-    # --- Read hook input from stdin (Claude Code provides session context) ---
+    # --- Read hook input from stdin (Qwen Code provides session context) ---
     try:
         input_data = json.loads(sys.stdin.read())
         session_id = input_data.get("session_id", "")

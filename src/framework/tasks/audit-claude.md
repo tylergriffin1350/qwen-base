@@ -3,7 +3,7 @@ Audit all .qwen/ directories across a workspace. Discover sprawl, classify each 
 </purpose>
 
 <user-story>
-As an AI builder with multiple projects in my workspace, I want all my .qwen/ directories audited for duplication, staleness, and misplacement, so that my Claude Code configuration is clean, consistent, and I know exactly what's project-specific vs what should be global.
+As an AI builder with multiple projects in my workspace, I want all my .qwen/ directories audited for duplication, staleness, and misplacement, so that my Qwen Code configuration is clean, consistent, and I know exactly what's project-specific vs what should be global.
 </user-story>
 
 <when-to-use>
@@ -15,11 +15,11 @@ As an AI builder with multiple projects in my workspace, I want all my .qwen/ di
 </when-to-use>
 
 <framework>
-@frameworks/claude-config-alignment.md
+@frameworks/qwen-config-alignment.md
 </framework>
 
 <output-rules>
-ALL audit findings MUST be written to a markdown report file at `.base/audits/claude-config-{YYYY-MM-DD}.md`.
+ALL audit findings MUST be written to a markdown report file at `.base/audits/qwen-config-{YYYY-MM-DD}.md`.
 
 Do NOT dump findings into the chat as inline text. The chat is for brief status updates, questions, and confirmations only. The report is where all detail lives.
 
@@ -28,7 +28,7 @@ The report must be:
 - Readable by a human who opens it in any markdown viewer
 - Comprehensive: current state, classifications with evidence, remediation plan with risk levels, items kept and why
 
-After writing the report, tell the operator: "Audit report written to `.base/audits/claude-config-{date}.md`. Review it, then tell me which remediation groups to execute."
+After writing the report, tell the operator: "Audit report written to `.base/audits/qwen-config-{date}.md`. Review it, then tell me which remediation groups to execute."
 
 During remediation execution, update the report with results (append a "Remediation Results" section).
 </output-rules>
@@ -61,7 +61,7 @@ Classify every item in every project-level .qwen/ directory.
 
 **CRITICAL: Git boundary awareness.**
 
-The scanner dataset includes `git_boundary` data for each directory. This tells you what each project actually sees when Claude Code boots there:
+The scanner dataset includes `git_boundary` data for each directory. This tells you what each project actually sees when Qwen Code boots there:
 
 - `has_own_git: true` → This project has its own git root. It does NOT see the workspace root `.qwen/` or workspace `.mcp.json`. It only sees global `~/.qwen/` + its own `.qwen/`.
 - `has_own_git: false` → This project inherits the workspace root. It sees global `~/.qwen/` + workspace root `.qwen/` + its own `.qwen/`.
@@ -102,7 +102,7 @@ For own-git projects, the right framing is:
 <step name="settings_reconciliation">
 Analyze settings.json and settings.local.json files specifically.
 
-These are the most dangerous files because they control Claude Code behavior:
+These are the most dangerous files because they control Qwen Code behavior:
 
 1. For each project-level settings.json:
    a. Parse hook definitions — list every hook command
@@ -162,7 +162,7 @@ If any reclassifications happen in this step, update all downstream plan entries
 </step>
 
 <step name="build_report">
-Write the complete audit report to `.base/audits/claude-config-{YYYY-MM-DD}.md`.
+Write the complete audit report to `.base/audits/qwen-config-{YYYY-MM-DD}.md`.
 
 Report structure:
 1. **MD5 disclaimer** — Always include this at the top, right after the metadata block, as a blockquote:
@@ -183,7 +183,7 @@ Report structure:
 6. **Items Kept (No Action)** — What's staying and exactly why
 7. **Next Steps** — What the operator should do
 
-Tell the operator: "Audit report written to `.base/audits/claude-config-{date}.md`. Review it, then we'll decide how to handle remediation."
+Tell the operator: "Audit report written to `.base/audits/qwen-config-{date}.md`. Review it, then we'll decide how to handle remediation."
 
 **Wait for operator to review the report before proceeding to graduation routing.**
 </step>
@@ -197,7 +197,7 @@ Route remediation into a structured execution path. Present the operator with op
 AUDIT COMPLETE — REMEDIATION ROUTING
 ════════════════════════════════════════
 
-The audit report is ready at .base/audits/claude-config-{date}.md
+The audit report is ready at .base/audits/qwen-config-{date}.md
 
 How would you like to handle remediation?
 
@@ -227,7 +227,7 @@ How would you like to handle remediation?
    2. cd {path}
    3. Run /paul:init
    4. When defining scope, reference the audit report:
-      @.base/audits/claude-config-{date}.md
+      @.base/audits/qwen-config-{date}.md
 
    The audit report's Remediation Plan section maps directly
    to PAUL phases — each remediation group can be a phase.
@@ -255,7 +255,7 @@ How would you like to handle remediation?
    To proceed:
    1. In the selected project, run /paul:milestone
    2. When defining scope, reference the audit report:
-      @.base/audits/claude-config-{date}.md
+      @.base/audits/qwen-config-{date}.md
 
    The audit report's Remediation Plan section provides
    the scope — each remediation group maps to a phase.
@@ -304,9 +304,9 @@ Verify the workspace is healthy after all remediation and update the report.
    - What was executed (by group)
    - What was verified
    - Any issues found during verification
-   - Projects the operator should test by opening Claude Code in them
+   - Projects the operator should test by opening Qwen Code in them
 
-Tell the operator: "Remediation complete. Report updated. Recommend testing Claude Code in: {list of modified projects}."
+Tell the operator: "Remediation complete. Report updated. Recommend testing Qwen Code in: {list of modified projects}."
 </step>
 
 </steps>

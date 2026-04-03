@@ -1,15 +1,15 @@
-# CLAUDE.md Template
+# QWEN.md Template
 
-Reference template for generating strategy-compliant CLAUDE.md files. Placeholders use `{PLACEHOLDER}` format. Comments use `<!-- -->` and must be removed in final output.
+Reference template for generating strategy-compliant QWEN.md files. Placeholders use `{PLACEHOLDER}` format. Comments use `<!-- -->` and must be removed in final output.
 
 ***
 
 ```Markdown
-# CLAUDE.md
+# QWEN.md
 
 ## What
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Qwen Code (claude.ai/code) when working with code in this repository.
 
 ---
 
@@ -97,6 +97,6 @@ NEVER {WRONG_ACTION} — {RIGHT_ACTION}
 * Remove all `<!-- -->` comments before finalizing
 * Remove placeholder sections that don't apply (not every workspace needs Git Strategy or Systems)
 * The Where tree should reflect the ACTUAL filesystem, verified by scanning
-* Rules should be workspace-identity-level, not operational. If a rule only applies during specific work (e.g., "when writing tests..."), it belongs in a domain-specific rule system, not CLAUDE.md
+* Rules should be workspace-identity-level, not operational. If a rule only applies during specific work (e.g., "when writing tests..."), it belongs in a domain-specific rule system, not QWEN.md
 * `@` references point Claude to files it should read on demand — use for anything volatile or detailed
 

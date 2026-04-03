@@ -11,7 +11,7 @@ Designed to be composed into any audit workflow that touches the system layer. T
 - During initial BASE setup on an existing workspace (lots of legacy `.qwen/` dirs)
 - As part of periodic workspace audits
 - After installing a new tool/skill globally and wanting to clean up project-level copies
-- When the user suspects their Claude Code config is fragmented
+- When the user suspects their Qwen Code config is fragmented
 
 ---
 
@@ -125,7 +125,7 @@ An item is PROJECT_SPECIFIC if:
 An item is STALE if:
 - settings.json references MCP servers that aren't in the current `.mcp.json` or global config
 - hooks reference scripts or tools that have been renamed or removed
-- Settings use old configuration patterns that Claude Code no longer supports
+- Settings use old configuration patterns that Qwen Code no longer supports
 - The `.qwen/` directory hasn't been modified in 60+ days AND the project itself shows no recent activity
 
 **Present specific evidence of staleness. Never assume — prove it.**
@@ -168,7 +168,7 @@ Project-level `settings.json` and `settings.local.json` require special handling
 
 ## Remediation Safety Protocol
 
-This is the most important section. `.qwen/` configuration is what makes Claude Code work. A broken config means a broken development environment. Every remediation action must follow these rules:
+This is the most important section. `.qwen/` configuration is what makes Qwen Code work. A broken config means a broken development environment. Every remediation action must follow these rules:
 
 ### Before any change
 1. **Explain what will change and why** — No "cleaning up your config." Say exactly: "Removing `apps/casegate-v2/.qwen/hooks/carl-hook.py` because an identical version runs globally from `~/.qwen/hooks/dynamic-rules-loader.py`. The global hook already fires on every prompt in every project."
@@ -182,7 +182,7 @@ This is the most important section. `.qwen/` configuration is what makes Claude 
 
 ### After all changes
 7. **Summary report** — What was changed, what was kept, what needs manual follow-up
-8. **Recommend a test** — "Open Claude Code in {project} and verify hooks fire correctly"
+8. **Recommend a test** — "Open Qwen Code in {project} and verify hooks fire correctly"
 
 ### What this workflow NEVER does
 - Modify `~/.qwen/` (global config) without explicit promotion approval

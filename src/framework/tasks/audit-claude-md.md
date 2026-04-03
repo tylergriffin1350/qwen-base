@@ -1,14 +1,14 @@
 <purpose>
-Audit an existing CLAUDE.md against the CLAUDE.md Strategy framework, then interactively rewrite it with user approval at each stage. Detects CARL installation and routes operational rules accordingly.
+Audit an existing QWEN.md against the QWEN.md Strategy framework, then interactively rewrite it with user approval at each stage. Detects CARL installation and routes operational rules accordingly.
 </purpose>
 
 <user-story>
-As an AI builder, I want my CLAUDE.md audited against a proven strategy so I get a compliant, lean configuration file — with operational rules properly routed to CARL or preserved as an artifact for later.
+As an AI builder, I want my QWEN.md audited against a proven strategy so I get a compliant, lean configuration file — with operational rules properly routed to CARL or preserved as an artifact for later.
 </user-story>
 
 <when-to-use>
 - During /base:scaffold (optional step)
-- When user says "audit my claude.md", "improve my claude.md", "rewrite my claude.md"
+- When user says "audit my QWEN.md", "improve my QWEN.md", "rewrite my QWEN.md"
 - Entry point: /base:audit-claude-md
 </when-to-use>
 
@@ -20,7 +20,7 @@ As an AI builder, I want my CLAUDE.md audited against a proven strategy so I get
 <steps>
 
 <step name="load_strategy" priority="first">
-Load the CLAUDE.md Strategy framework and template.
+Load the QWEN.md Strategy framework and template.
 
 1. Read `@{~/.qwen/commands/qwen-base/frameworks/claudemd-strategy.md}` — this is the source of truth
 2. Read `@{~/.qwen/commands/qwen-base/templates/claudemd-template.md}` — this is the structural reference
@@ -30,15 +30,15 @@ You MUST understand the full strategy before reading the user's file. The strate
 </step>
 
 <step name="read_and_catalog">
-Read the user's existing CLAUDE.md and catalog every piece of content.
+Read the user's existing QWEN.md and catalog every piece of content.
 
-1. Read `CLAUDE.md` from workspace root
-2. If no CLAUDE.md exists → skip to `generate_fresh` step
+1. Read `QWEN.md` from workspace root
+2. If no QWEN.md exists → skip to `generate_fresh` step
 3. For every section, paragraph, rule, table, and reference in the file, classify each as:
-   - **KEEP** — belongs in CLAUDE.md per the strategy (identity, structure, constitutional rules)
+   - **KEEP** — belongs in QWEN.md per the strategy (identity, structure, constitutional rules)
    - **REMOVE** — doesn't belong (volatile data, task lists, state references, redundant sections)
    - **RESTRUCTURE** — right content, wrong location or format (e.g., rule using "always" instead of NEVER pattern, operational content in wrong section)
-   - **CARL_CANDIDATE** — operational rule or domain-specific behavior that belongs in a rules engine, not CLAUDE.md
+   - **CARL_CANDIDATE** — operational rule or domain-specific behavior that belongs in a rules engine, not QWEN.md
 
 4. Count total lines. Note if over 100-line budget.
 </step>
@@ -92,7 +92,7 @@ Wait for user decision before proceeding.
 </step>
 
 <step name="propose_rewrite">
-Build the new CLAUDE.md section by section, presenting each for approval.
+Build the new QWEN.md section by section, presenting each for approval.
 
 For EACH section (What, Why, Who, Where, How):
 
@@ -136,36 +136,36 @@ Handle operational rules that were classified as CARL_CANDIDATE.
 </step>
 
 <step name="write_and_finalize">
-Write the approved CLAUDE.md.
+Write the approved QWEN.md.
 
 1. Assemble all approved sections into final document
 2. Verify line count (warn if over 100)
-3. Write to `CLAUDE.base.md` in workspace root (NEVER overwrite CLAUDE.md directly)
+3. Write to `CLAUDE.base.md` in workspace root (NEVER overwrite QWEN.md directly)
 4. Present final diff summary: sections added, removed, restructured, rules routed
 
 Tell user:
-- "Review `CLAUDE.base.md`. To adopt it: `mv CLAUDE.base.md CLAUDE.md`"
-- "Your original CLAUDE.md is untouched."
+- "Review `CLAUDE.base.md`. To adopt it: `mv CLAUDE.base.md QWEN.md`"
+- "Your original QWEN.md is untouched."
 - If CARL candidates were routed: "Operational rules are in {location}."
 </step>
 
 </steps>
 
 <output>
-- `CLAUDE.base.md` — strategy-compliant CLAUDE.md ready for adoption
+- `CLAUDE.base.md` — strategy-compliant QWEN.md ready for adoption
 - CARL domain rules (if CARL installed) or `.base/artifacts/claudemd-audit-rules.md` (if not)
-- Original CLAUDE.md untouched
+- Original QWEN.md untouched
 </output>
 
 <acceptance-criteria>
 - [ ] Strategy framework loaded and understood before audit begins
-- [ ] Every line of existing CLAUDE.md classified (KEEP/REMOVE/RESTRUCTURE/CARL_CANDIDATE)
+- [ ] Every line of existing QWEN.md classified (KEEP/REMOVE/RESTRUCTURE/CARL_CANDIDATE)
 - [ ] Full audit presented to user with approval gate before rewriting
 - [ ] CARL installation detected and rule routing decided with user
 - [ ] Each section proposed individually with user approval
 - [ ] All rules use NEVER pattern
 - [ ] Final output under 100 lines
 - [ ] Operational rules routed to CARL or saved as artifact
-- [ ] Original CLAUDE.md never modified
+- [ ] Original QWEN.md never modified
 - [ ] User informed of how to adopt and next steps
 </acceptance-criteria>

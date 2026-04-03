@@ -2,7 +2,7 @@
 
 ## What Are Satellites
 
-Satellites are projects that live in their own git repos inside the workspace (e.g., `apps/*`). They run their own Claude Code sessions independently. BASE needs visibility into them without owning them.
+Satellites are projects that live in their own git repos inside the workspace (e.g., `apps/*`). They run their own Qwen Code sessions independently. BASE needs visibility into them without owning them.
 
 ## Registration Flow
 

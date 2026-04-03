@@ -4,7 +4,7 @@ Hook: satellite-detection.py
 Purpose: Scans the workspace recursively for .paul/paul.json files,
          auto-registers new satellites, and syncs paul.json state to
          workspace.json and projects.json.
-Triggers: SessionStart — runs once when Claude Code starts a session.
+Triggers: SessionStart — runs once when Qwen Code starts a session.
 Output: <base-satellites> block if new satellites registered, silent otherwise.
 
 Sync flow (paul.json → workspace.json → projects.json):

@@ -1,24 +1,24 @@
-# The CLAUDE.md Strategy
+# The QWEN.md Strategy
 
-Composable framework for auditing and writing high-performance CLAUDE.md files. Source of truth for the `/base:audit-claude-md` workflow.
+Composable framework for auditing and writing high-performance QWEN.md files. Source of truth for the `/base:audit-claude-md` workflow.
 
 ---
 
 ## The Structure: What, Why, Who, Where, How
 
-Every CLAUDE.md follows five sections in this exact order. Each section answers one question. Together they give Claude complete operating context without bloat.
+Every QWEN.md follows five sections in this exact order. Each section answers one question. Together they give Claude complete operating context without bloat.
 
 ### What
 What this document is and what this workspace contains.
 
 One line. Sets the contract. Claude knows this is its instruction set.
 
-> "This file provides guidance to Claude Code when working with code in this repository."
+> "This file provides guidance to Qwen Code when working with code in this repository."
 
 ### Why
 The philosophy. Identity context. Why this workspace exists.
 
-This is where you separate identity from operations. CLAUDE.md answers the "who am I working with?" question. Operational details (how to run a specific project, current sprint status) live elsewhere and get referenced with `@` pointers.
+This is where you separate identity from operations. QWEN.md answers the "who am I working with?" question. Operational details (how to run a specific project, current sprint status) live elsewhere and get referenced with `@` pointers.
 
 ### Who
 Business context. Who the user is, what they do, what matters to them.
@@ -81,14 +81,14 @@ It's a binary check. Claude can look at its own output and ask: "Did I do the fo
 
 ## The @ Reference System
 
-CLAUDE.md stays lean by pointing to other files instead of inlining their content.
+QWEN.md stays lean by pointing to other files instead of inlining their content.
 
 ```
 @LINKS.md — Personal branding URLs
 @projects/dashboard-build/PLANNING.md — Active project context
 ```
 
-Claude reads `@`-referenced files on demand. Your CLAUDE.md stays lean while still giving Claude access to deep context.
+Claude reads `@`-referenced files on demand. Your QWEN.md stays lean while still giving Claude access to deep context.
 
 **What to inline vs what to reference:**
 - **Inline:** Identity (who, what, why), workspace structure, rules, quick references
@@ -98,9 +98,9 @@ Claude reads `@`-referenced files on demand. Your CLAUDE.md stays lean while sti
 
 ## What Stays Out
 
-The test: **if it changes every week, it doesn't belong in CLAUDE.md.**
+The test: **if it changes every week, it doesn't belong in QWEN.md.**
 
-CLAUDE.md is the constitution, not the daily newspaper.
+QWEN.md is the constitution, not the daily newspaper.
 
 | Doesn't belong | Where it goes |
 |----------------|---------------|
@@ -116,7 +116,7 @@ CLAUDE.md is the constitution, not the daily newspaper.
 
 Target: **under 100 lines.** This is a routing document, not a knowledge base.
 
-If your CLAUDE.md is over 100 lines, content is being inlined that should be referenced or removed. Common offenders:
+If your QWEN.md is over 100 lines, content is being inlined that should be referenced or removed. Common offenders:
 - Inline system/framework descriptions (replace with a compact table)
 - Redundant location tables when a tree diagram already exists
 - Documentation system descriptions (the tree covers this)
@@ -126,7 +126,7 @@ If your CLAUDE.md is over 100 lines, content is being inlined that should be ref
 
 ## Audit Criteria
 
-When auditing an existing CLAUDE.md, check:
+When auditing an existing QWEN.md, check:
 
 ### Structure
 - [ ] Follows What → Why → Who → Where → How order
@@ -154,5 +154,5 @@ When auditing an existing CLAUDE.md, check:
 
 ### CARL Integration (if present)
 - [ ] Operational rules that belong in domain-specific contexts are flagged for CARL migration
-- [ ] CLAUDE.md rules are constitutional (identity-level), not operational
-- [ ] No duplication between CLAUDE.md rules and CARL domain rules
+- [ ] QWEN.md rules are constitutional (identity-level), not operational
+- [ ] No duplication between QWEN.md rules and CARL domain rules

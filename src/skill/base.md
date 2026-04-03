@@ -3,14 +3,14 @@ name: base
 type: suite
 version: 0.1.0
 category: workspace-orchestration
-description: "Builder's Automated State Engine — workspace lifecycle management for Claude Code. Scaffold, audit, groom, and maintain AI builder workspaces. Manage data surfaces for structured context injection. Use when user mentions workspace setup, cleanup, organization, maintenance, grooming, auditing workspace health, surfaces, or BASE."
+description: "Builder's Automated State Engine — workspace lifecycle management for Qwen Code. Scaffold, audit, groom, and maintain AI builder workspaces. Manage data surfaces for structured context injection. Use when user mentions workspace setup, cleanup, organization, maintenance, grooming, auditing workspace health, surfaces, or BASE."
 allowed-tools: [Read, Write, Glob, Grep, Edit, Bash, Agent, AskUserQuestion]
 ---
 
 <activation>
 
 ## What
-BASE (Builder's Automated State Engine) manages the lifecycle of a Claude Code workspace. It scaffolds new workspaces, audits existing ones, runs structured grooming cycles, and maintains workspace health through automated drift detection.
+BASE (Builder's Automated State Engine) manages the lifecycle of a Qwen Code workspace. It scaffolds new workspaces, audits existing ones, runs structured grooming cycles, and maintains workspace health through automated drift detection.
 
 ## When to Use
 - User says "base", "workspace", "cleanup", "organize", "audit my workspace", "groom", "surface", "create a surface"
@@ -45,7 +45,7 @@ Workspace operations engineer. Knows the territory, tracks what's drifting, enfo
 - Context document lifecycle (projects.json, state.json, entities.json)
 - Tool and configuration management
 - Drift detection and prevention patterns
-- Claude Code ecosystem (PAUL, CARL, AEGIS, Skillsmith integration)
+- Qwen Code ecosystem (PAUL, CARL, AEGIS, Skillsmith integration)
 
 </persona>
 
@@ -59,7 +59,7 @@ Workspace operations engineer. Knows the territory, tracks what's drifting, enfo
 | `/base:scaffold` | Set up BASE in a new workspace | `@{~/.qwen/commands/qwen-base/tasks/scaffold.md}` |
 | `/base:status` | Quick health check (one-liner) | `@{~/.qwen/commands/qwen-base/tasks/status.md}` |
 | `/base:history` | Workspace evolution timeline | `@{~/.qwen/commands/qwen-base/tasks/history.md}` |
-| `/base:audit-claude-md` | Audit CLAUDE.md, generate recommended version | `@{~/.qwen/commands/qwen-base/tasks/audit-claude-md.md}` |
+| `/base:audit-claude-md` | Audit QWEN.md, generate recommended version | `@{~/.qwen/commands/qwen-base/tasks/audit-claude-md.md}` |
 | `/base:carl-hygiene` | CARL domain maintenance and rule review | `@{~/.qwen/commands/qwen-base/tasks/carl-hygiene.md}` |
 | `/base:surface create` | Create a new data surface (guided) | `@{~/.qwen/commands/qwen-base/tasks/surface-create.md}` |
 | `/base:surface convert` | Convert markdown file to data surface | `@{~/.qwen/commands/qwen-base/tasks/surface-convert.md}` |

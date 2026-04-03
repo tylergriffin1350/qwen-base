@@ -49,7 +49,7 @@
     },
     "system-layer": {
       "type": "system-layer",
-      "description": "Claude Code commands, hooks, skills, CARL domains",
+      "description": "Qwen Code commands, hooks, skills, CARL domains",
       "paths": [
         ".qwen/commands/",
         ".qwen/hooks/",

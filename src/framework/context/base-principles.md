@@ -60,7 +60,7 @@ BACKLOG (status=backlog in projects.json)
 BASE scaffold operates in two modes:
 
 - **Standard** (`/base:scaffold`) — Data layer only. Creates `.base/` with workspace.json, `.base/data/state.json`, ROADMAP.md. Scans and tracks what exists. Framework-agnostic.
-- **Full** (`/base:scaffold --full`) — Data layer + projects.json + entities.json. Offers CLAUDE.md audit. The "batteries included" version for AI builders who want the full system.
+- **Full** (`/base:scaffold --full`) — Data layer + projects.json + entities.json. Offers QWEN.md audit. The "batteries included" version for AI builders who want the full system.
 
 Standard mode works for any workspace. Full mode provides Chris's proven operational structure.
 

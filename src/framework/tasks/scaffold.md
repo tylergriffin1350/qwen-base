@@ -1,5 +1,5 @@
 <purpose>
-Set up BASE in a new or existing workspace. Scan the workspace, ask guided questions, generate the manifest, install hooks, initialize JSON data surfaces, and run operator profile setup. Optional --full mode adds CLAUDE.md audit and guided first groom.
+Set up BASE in a new or existing workspace. Scan the workspace, ask guided questions, generate the manifest, install hooks, initialize JSON data surfaces, and run operator profile setup. Optional --full mode adds QWEN.md audit and guided first groom.
 </purpose>
 
 <user-story>
@@ -10,7 +10,7 @@ As an AI builder setting up my workspace, I want a guided scaffolding process th
 - First-time BASE installation in any workspace
 - When user says "base scaffold", "set up base", "initialize workspace management"
 - Entry point routes here via /base:scaffold
-- Use --full flag for batteries-included mode with CLAUDE.md audit + first groom
+- Use --full flag for batteries-included mode with QWEN.md audit + first groom
 </when-to-use>
 
 <context>
@@ -23,7 +23,7 @@ As an AI builder setting up my workspace, I want a guided scaffolding process th
 Determine scaffold mode.
 
 1. Check if user specified `--full` or mentioned wanting full setup
-2. If `--full`: CLAUDE.md audit + first groom will be offered after data layer setup
+2. If `--full`: QWEN.md audit + first groom will be offered after data layer setup
 3. If standard: data layer + hooks + operator profile
 4. Announce mode: "Running BASE scaffold ({standard|full} mode)."
 </step>
@@ -111,7 +111,7 @@ All hooks live in `.base/hooks/`. Session hooks are registered in `.qwen/setting
 - psmm-injector.py — per-session meta memory injection
 - operator.py — operator identity context injection
 
-**SessionStart hooks** (fire once when Claude Code starts a session):
+**SessionStart hooks** (fire once when Qwen Code starts a session):
 - satellite-detection.py — PAUL project auto-registration and state sync
 
 **On-demand hooks** (invoked by commands, not auto-registered):
@@ -121,7 +121,7 @@ All hooks live in `.base/hooks/`. Session hooks are registered in `.qwen/setting
 
 ### ENVIRONMENT DETECTION (REQUIRED — do this FIRST)
 
-Hooks are shell commands that Claude Code executes. The python path AND file paths must work in the context where Claude Code is running. Detect the environment before wiring anything.
+Hooks are shell commands that Qwen Code executes. The python path AND file paths must work in the context where Qwen Code is running. Detect the environment before wiring anything.
 
 **Step 1: Identify the platform.**
 Run these commands and read the results:
@@ -137,9 +137,9 @@ echo $TERM_PROGRAM  # vscode = VS Code integrated terminal
 |---|---|---|---|
 | **Native Linux** | `uname` = Linux, no WSL in /proc/version | `which python3` → use result | Native paths work |
 | **Native macOS** | `uname` = Darwin | `which python3` → use result (often /opt/homebrew/bin/python3) | Native paths work |
-| **WSL Terminal** (Claude Code CLI in WSL) | Linux + "Microsoft" in /proc/version + NOT in VS Code | `which python3` → use result (typically /usr/bin/python3) | WSL paths work (/home/user/...) |
+| **WSL Terminal** (Qwen Code CLI in WSL) | Linux + "Microsoft" in /proc/version + NOT in VS Code | `which python3` → use result (typically /usr/bin/python3) | WSL paths work (/home/user/...) |
 | **VS Code Extension (WSL Remote)** | Linux + WSL + TERM_PROGRAM=vscode | `which python3` → use result | WSL paths work (VS Code server runs inside WSL) |
-| **VS Code Extension (Windows-native)** | platform: win32 in Claude Code, OR `uname` returns MINGW/MSYS | See troubleshooting below | Windows paths required |
+| **VS Code Extension (Windows-native)** | platform: win32 in Qwen Code, OR `uname` returns MINGW/MSYS | See troubleshooting below | Windows paths required |
 | **Native Windows** | No WSL, Windows paths | `where python` or `py -3` | Windows paths (C:\...) |
 
 **Step 3: Handle the tricky cases.**
@@ -158,7 +158,7 @@ This is the hardest case. The VS Code extension runs on the Windows side but can
    - This runs the VS Code server inside WSL — all hooks fire natively
    - All WSL paths and python work correctly
 
-2. **Use Claude Code CLI in WSL terminal instead of VS Code extension:**
+2. **Use Qwen Code CLI in WSL terminal instead of VS Code extension:**
    - Open a WSL terminal, `cd` to workspace, run `claude`
    - All hooks fire natively in WSL context
    - Use VS Code separately for editing if needed
@@ -178,7 +178,7 @@ This is the hardest case. The VS Code extension runs on the Windows side but can
    ```
    This is fragile and NOT recommended for most users.
 
-**IMPORTANT: Ask the user which environment they use Claude Code in before proceeding.**
+**IMPORTANT: Ask the user which environment they use Qwen Code in before proceeding.**
 If they use multiple environments (e.g., CLI in WSL + VS Code extension), explain the constraints and recommend option 1 (VS Code Remote WSL).
 
 ---
@@ -199,7 +199,7 @@ For each auto-fire hook:
 
 Hook registration format in settings.json:
 
-**CRITICAL: Each event type array contains objects with a `hooks` array inside — NOT flat command objects.** This is the Claude Code settings.json schema. Getting this wrong means hooks silently fail.
+**CRITICAL: Each event type array contains objects with a `hooks` array inside — NOT flat command objects.** This is the Qwen Code settings.json schema. Getting this wrong means hooks silently fail.
 
 ```json
 {
@@ -236,16 +236,16 @@ If hooks aren't firing after setup, diagnose with these checks:
 
 **Symptom: "operation blocked by hook" or "No such file"**
 - Python path is wrong for the current environment
-- Fix: re-detect python path for the environment Claude Code is running in
+- Fix: re-detect python path for the environment Qwen Code is running in
 
 **Symptom: Zero hooks fire (no CARL, no pulse, no calendar, nothing)**
 - Likely a platform mismatch (Windows paths vs WSL paths)
 - Check: `echo $PATH | tr ':' '\n' | grep python` — does python3 resolve?
-- Check: Can Claude Code's shell access the hook file? Run `cat {hook_path}` to verify
+- Check: Can Qwen Code's shell access the hook file? Run `cat {hook_path}` to verify
 
 **Symptom: Hooks fire in terminal but not in VS Code (or vice versa)**
-- Different Claude Code instances run in different contexts
-- VS Code extension (Windows-native) ≠ Claude Code CLI (WSL)
+- Different Qwen Code instances run in different contexts
+- VS Code extension (Windows-native) ≠ Qwen Code CLI (WSL)
 - Fix: Use VS Code Remote WSL extension so both contexts are WSL
 
 **Symptom: "python3: command not found"**
@@ -306,11 +306,11 @@ The MCP server package lives globally at `~/.qwen/base-framework/packages/base-m
 <step name="full_mode_extras">
 **Full mode only.**
 
-**CLAUDE.md audit:**
-1. Check if CLAUDE.md exists
-2. If exists: "Want me to audit your CLAUDE.md against the CLAUDE.md Strategy?"
+**QWEN.md audit:**
+1. Check if QWEN.md exists
+2. If exists: "Want me to audit your QWEN.md against the QWEN.md Strategy?"
    - If yes: route to `/base:audit-claude-md` (interactive, strategy-driven audit with CARL detection)
-3. If doesn't exist: "Want me to generate a CLAUDE.md from the strategy template?"
+3. If doesn't exist: "Want me to generate a QWEN.md from the strategy template?"
    - If yes: use `@{~/.qwen/commands/qwen-base/templates/claudemd-template.md}` as starting point, fill from detected workspace structure
 
 **First groom:**
@@ -347,8 +347,8 @@ Quick review and cleanup. Catches artifacts from path detection bugs, stale file
    - Check `node_modules/` exists in `.base/base-mcp/`
    - If broken: fix it (copy from global, npm install, re-register)
 
-5. **Structure alignment** — Verify workspace matches CLAUDE.md's Where section:
-   - Read CLAUDE.md (if it exists) and extract the Where section
+5. **Structure alignment** — Verify workspace matches QWEN.md's Where section:
+   - Read QWEN.md (if it exists) and extract the Where section
    - Compare declared directories against what actually exists
    - Flag any mismatches (declared but not created, or created but not declared)
    - Don't auto-fix — just report for user awareness
@@ -369,7 +369,7 @@ If everything is clean: "Workspace is clean. No artifacts, all paths valid, stru
 </steps>
 
 <output>
-Fully configured BASE installation. Standard mode: data layer with JSON surfaces, hooks wired, operator profile setup, MCP registered, post-scaffold cleanup verified. Full mode: adds CLAUDE.md audit and guided first groom.
+Fully configured BASE installation. Standard mode: data layer with JSON surfaces, hooks wired, operator profile setup, MCP registered, post-scaffold cleanup verified. Full mode: adds QWEN.md audit and guided first groom.
 </output>
 
 <acceptance-criteria>
@@ -383,7 +383,7 @@ Fully configured BASE installation. Standard mode: data layer with JSON surfaces
 - [ ] All auto-fire hooks installed and registered in settings.json (UserPromptSubmit + SessionStart)
 - [ ] BASE MCP server wired in .mcp.json
 - [ ] Post-scaffold cleanup passed (no artifacts, valid paths, structure aligned)
-- [ ] (Full mode) CLAUDE.md audit offered
+- [ ] (Full mode) QWEN.md audit offered
 - [ ] (Full mode) First groom offered
 - [ ] Operator informed of next groom date
 </acceptance-criteria>

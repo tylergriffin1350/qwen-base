@@ -15,7 +15,7 @@ As an operator with aligned initiatives and projects, I want to capture the imme
 <steps>
 
 <step name="frame_and_filter" priority="first">
-> Tasks are YOUR accountability items — things that must get done. Not Claude Code todos. Not aspirational ideas. Concrete next actions.
+> Tasks are YOUR accountability items — things that must get done. Not Qwen Code todos. Not aspirational ideas. Concrete next actions.
 >
 > We'll go initiative by initiative, project by project. For each project, I'll show you the current status and ask: "What must get done next?"
 >
@@ -89,5 +89,5 @@ Tasks created in Apex via MCP under their parent projects. Operator's immediate 
 - [ ] Tasks created via base_add_project(type="task") with correct parent_id
 - [ ] Operator could skip projects freely
 - [ ] Summary displayed with total counts
-- [ ] NEVER treated tasks as Claude Code internal todos
+- [ ] NEVER treated tasks as Qwen Code internal todos
 </acceptance-criteria>

@@ -270,16 +270,16 @@ def find_git_root(directory):
 
 
 def detect_git_boundary(claude_dir, workspace_root):
-    """Determine which config layers are visible when Claude Code boots in this directory.
+    """Determine which config layers are visible when Qwen Code boots in this directory.
 
-    Claude Code resolves the project root from the nearest .git boundary.
+    Qwen Code resolves the project root from the nearest .git boundary.
     - Global ~/.qwen/ is always visible
     - Workspace root .qwen/ is only visible if the project's git root IS the workspace root
     - The project's own .qwen/ is visible if it's at or under the git root
 
     Returns a dict describing the visibility context.
     """
-    # The .claude dir's parent is where Claude Code would boot
+    # The .claude dir's parent is where Qwen Code would boot
     parent_dir = os.path.dirname(claude_dir)
     git_root = find_git_root(parent_dir)
 

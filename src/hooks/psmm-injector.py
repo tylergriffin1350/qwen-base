@@ -5,7 +5,7 @@ Purpose: Per-Session Meta Memory — inject ephemeral session observations
          into every prompt so they stay hot in long sessions (1M window).
 
          Uses a single psmm.json file with session-keyed entries.
-         Each session gets its own array keyed by Claude Code session UUID.
+         Each session gets its own array keyed by Qwen Code session UUID.
          Stale sessions are NOT auto-cleaned — that's the operator's job
          via CARL hygiene / BASE drift detection.
 

@@ -124,8 +124,8 @@ If any items couldn't be auto-mapped, present them for manual resolution.
 <step name="cleanup">
 ## Step 6: Clean Up
 
-1. Check if the original file is @-referenced in CLAUDE.md
-2. If found, offer: "Remove @{file} from CLAUDE.md? The surface hook replaces it."
+1. Check if the original file is @-referenced in QWEN.md
+2. If found, offer: "Remove @{file} from QWEN.md? The surface hook replaces it."
 3. Suggest: "Original file preserved at {path} for reference."
 
 Do NOT delete the original markdown file — the user decides its fate.
