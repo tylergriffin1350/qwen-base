@@ -152,6 +152,16 @@ function installCommands(isGlobal) {
   // Copy skill entry point
   if (fs.existsSync(path.join(src, 'src', 'skill'))) {
     copyDir(path.join(src, 'src', 'skill'), path.join(baseDest, 'skill'));
+    // Also copy to .qwen/skill/base/ (matching original .claude/skills/base/)
+    const skillDest = path.join(qwenDir, 'skill', 'base');
+    copyDir(path.join(src, 'src', 'skill'), skillDest);
+    // Copy MCP package sources into skill (for scaffold reference)
+    const skillMcpDest = path.join(skillDest, 'packages', 'base-mcp');
+    copyDir(path.join(src, 'src', 'packages', 'base-mcp'), skillMcpDest);
+    // Also to framework for scaffold
+    const fwMcpDest = path.join(baseDest, 'framework', 'packages', 'base-mcp');
+    copyDir(path.join(src, 'src', 'packages', 'base-mcp'), fwMcpDest);
+    console.log(`  ${green}+${reset} skill/base/ (entry point + MCP package)`);
   }
   // Copy hooks to framework
   if (fs.existsSync(path.join(src, 'src', 'hooks'))) {
