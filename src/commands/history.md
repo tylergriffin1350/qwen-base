@@ -11,7 +11,7 @@ Show workspace evolution — grooming history, audits, major changes over time.
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/tasks/history.md}
+@{~/.qwen/base/framework/tasks/history.md}
 </execution_context>
 
 <context>
@@ -19,7 +19,7 @@ Show workspace evolution — grooming history, audits, major changes over time.
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/history.md}
+Follow task: @{~/.qwen/base/framework/tasks/history.md}
 </process>
 
 <success_criteria>

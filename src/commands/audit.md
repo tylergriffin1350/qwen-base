@@ -11,9 +11,9 @@ Deep workspace audit — comprehensive optimization across all areas with action
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/tasks/audit.md}
-@{~/.qwen/commands/qwen-base/context/base-principles.md}
-@{~/.qwen/commands/qwen-base/frameworks/audit-strategies.md}
+@{~/.qwen/base/framework/tasks/audit.md}
+@{~/.qwen/base/framework/context/base-principles.md}
+@{~/.qwen/base/framework/frameworks/audit-strategies.md}
 </execution_context>
 
 <context>
@@ -23,7 +23,7 @@ $ARGUMENTS
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/audit.md}
+Follow task: @{~/.qwen/base/framework/tasks/audit.md}
 </process>
 
 <success_criteria>

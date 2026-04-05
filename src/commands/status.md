@@ -11,7 +11,7 @@ One-liner workspace health status — drift score and area summary.
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/tasks/status.md}
+@{~/.qwen/base/framework/tasks/status.md}
 </execution_context>
 
 <context>
@@ -20,7 +20,7 @@ One-liner workspace health status — drift score and area summary.
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/status.md}
+Follow task: @{~/.qwen/base/framework/tasks/status.md}
 </process>
 
 <success_criteria>

@@ -11,7 +11,7 @@ Display all registered data surfaces with item counts and hook status.
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/tasks/surface-list.md}
+@{~/.qwen/base/framework/tasks/surface-list.md}
 </execution_context>
 
 <context>
@@ -19,7 +19,7 @@ Display all registered data surfaces with item counts and hook status.
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/surface-list.md}
+Follow task: @{~/.qwen/base/framework/tasks/surface-list.md}
 </process>
 
 <success_criteria>

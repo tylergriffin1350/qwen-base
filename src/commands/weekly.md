@@ -11,8 +11,8 @@ Guided weekly ritual — close the week, plan the next, run maintenance, lock in
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/tasks/weekly.md}
-@{~/.qwen/commands/qwen-base/context/base-principles.md}
+@{~/.qwen/base/framework/tasks/weekly.md}
+@{~/.qwen/base/framework/context/base-principles.md}
 </execution_context>
 
 <context>
@@ -24,7 +24,7 @@ $ARGUMENTS
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/weekly.md}
+Follow task: @{~/.qwen/base/framework/tasks/weekly.md}
 </process>
 
 <success_criteria>

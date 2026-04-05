@@ -12,9 +12,9 @@ Guided workspace setup — scan, configure, install BASE infrastructure. Optiona
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/tasks/scaffold.md}
-@{~/.qwen/commands/qwen-base/templates/workspace-json.md}
-@{~/.qwen/commands/qwen-base/templates/workspace-json.md}
+@{~/.qwen/base/framework/tasks/scaffold.md}
+@{~/.qwen/base/framework/templates/workspace-json.md}
+@{~/.qwen/base/framework/templates/workspace-json.md}
 </execution_context>
 
 <context>
@@ -22,7 +22,7 @@ $ARGUMENTS
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/scaffold.md}
+Follow task: @{~/.qwen/base/framework/tasks/scaffold.md}
 </process>
 
 <success_criteria>

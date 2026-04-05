@@ -12,7 +12,7 @@ Create a new data surface through guided conversation. Generates JSON data file,
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/tasks/surface-create.md}
+@{~/.qwen/base/framework/tasks/surface-create.md}
 @.base/hooks/_template.py
 </execution_context>
 
@@ -23,7 +23,7 @@ $ARGUMENTS
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/surface-create.md}
+Follow task: @{~/.qwen/base/framework/tasks/surface-create.md}
 </process>
 
 <success_criteria>

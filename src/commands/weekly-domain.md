@@ -11,7 +11,7 @@ Guided creation of a custom domain phase for /base:weekly. Walks the user throug
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/tasks/weekly-domain-create.md}
+@{~/.qwen/base/framework/tasks/weekly-domain-create.md}
 </execution_context>
 
 <context>
@@ -21,7 +21,7 @@ $ARGUMENTS
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/weekly-domain-create.md}
+Follow task: @{~/.qwen/base/framework/tasks/weekly-domain-create.md}
 </process>
 
 <success_criteria>

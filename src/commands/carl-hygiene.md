@@ -11,7 +11,7 @@ CARL rule lifecycle management — review staleness, staging pipeline, domain he
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/tasks/carl-hygiene.md}
+@{~/.qwen/base/framework/tasks/carl-hygiene.md}
 </execution_context>
 
 <context>
@@ -22,7 +22,7 @@ $ARGUMENTS
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/carl-hygiene.md}
+Follow task: @{~/.qwen/base/framework/tasks/carl-hygiene.md}
 </process>
 
 <success_criteria>

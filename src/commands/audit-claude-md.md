@@ -11,9 +11,9 @@ Audit the project's QWEN.md for strategy compliance, interactively rewrite it se
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/frameworks/claudemd-strategy.md}
-@{~/.qwen/commands/qwen-base/templates/claudemd-template.md}
-@{~/.qwen/commands/qwen-base/tasks/audit-claude-md.md}
+@{~/.qwen/base/framework/frameworks/claudemd-strategy.md}
+@{~/.qwen/base/framework/templates/claudemd-template.md}
+@{~/.qwen/base/framework/tasks/audit-claude-md.md}
 </execution_context>
 
 <context>
@@ -23,7 +23,7 @@ $ARGUMENTS
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/audit-claude-md.md}
+Follow task: @{~/.qwen/base/framework/tasks/audit-claude-md.md}
 
 Key gates (do NOT skip):
 1. Load strategy + template BEFORE reading user's QWEN.md

@@ -6,8 +6,8 @@ const os = require('os');
 const readline = require('readline');
 const { execSync } = require('child_process');
 
-const green = '\x1b[32m';
 const cyan = '\x1b[36m';
+const green = '\x1b[32m';
 const yellow = '\x1b[33m';
 const dim = '\x1b[2m';
 const reset = '\x1b[0m';
@@ -15,7 +15,7 @@ const reset = '\x1b[0m';
 const pkg = require('../package.json');
 
 const banner = `
-${green}  \u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\u2557
+${green}  \u2588\u2588\u2588\u2588\u2588\u2557  \u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\u2557
   \u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2557\u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2557\u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2557\u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2557
   \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551
   \u2588\u2588\u2554\u2550\u2550\u2550\u2588\u2588\u2551\u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2551\u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2551\u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2551
@@ -30,12 +30,13 @@ ${green}  \u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2588\u2588\u2588\u25
 const args = process.argv.slice(2);
 const hasGlobal = args.includes('--global') || args.includes('-g');
 const hasLocal = args.includes('--local') || args.includes('-l');
+const hasWorkspace = args.includes('--workspace') || args.includes('-w');
 const hasHelp = args.includes('--help') || args.includes('-h');
 
 function parseConfigDirArg() {
-  const idx = args.findIndex(arg => arg === '--config-dir' || arg === '-c');
-  if (idx !== -1) {
-    const nextArg = args[idx + 1];
+  const configDirIndex = args.findIndex(arg => arg === '--config-dir' || arg === '-c');
+  if (configDirIndex !== -1) {
+    const nextArg = args[configDirIndex + 1];
     if (!nextArg || nextArg.startsWith('-')) {
       console.error(`  ${yellow}--config-dir requires a path argument${reset}`);
       process.exit(1);
@@ -46,7 +47,6 @@ function parseConfigDirArg() {
   if (configDirArg) return configDirArg.split('=')[1];
   return null;
 }
-
 const explicitConfigDir = parseConfigDirArg();
 
 function expandTilde(filePath) {
@@ -54,14 +54,13 @@ function expandTilde(filePath) {
   return filePath;
 }
 
-function copyDir(srcDir, destDir, skipDirs = []) {
+function copyDir(srcDir, destDir) {
   fs.mkdirSync(destDir, { recursive: true });
   const entries = fs.readdirSync(srcDir, { withFileTypes: true });
   for (const entry of entries) {
-    if (skipDirs.includes(entry.name)) continue;
     const srcPath = path.join(srcDir, entry.name);
     const destPath = path.join(destDir, entry.name);
-    if (entry.isDirectory()) copyDir(srcPath, destPath, skipDirs);
+    if (entry.isDirectory()) copyDir(srcPath, destPath);
     else fs.copyFileSync(srcPath, destPath);
   }
 }
@@ -76,52 +75,57 @@ function countFiles(dir) {
   return count;
 }
 
-function wireMcp(workspaceDir, mcpIndexPath) {
-  const mcpJsonPath = path.join(workspaceDir, '.mcp.json');
-  let mcpConfig = {};
-  if (fs.existsSync(mcpJsonPath)) {
-    try { mcpConfig = JSON.parse(fs.readFileSync(mcpJsonPath, 'utf8')); } catch (e) {}
-  }
-  if (!mcpConfig.mcpServers) mcpConfig.mcpServers = {};
-  const normalizedPath = mcpIndexPath.replace(/\\/g, '/');
-  mcpConfig.mcpServers['base-mcp'] = { command: 'node', args: [normalizedPath], type: 'stdio' };
-  fs.writeFileSync(mcpJsonPath, JSON.stringify(mcpConfig, null, 2));
-}
-
 console.log(banner);
 
 if (hasHelp) {
   console.log(`  ${yellow}Usage:${reset} npx qwen-base [options]
 
   ${yellow}Options:${reset}
-    ${cyan}-g, --global${reset}              Install globally (to Qwen config directory)
-    ${cyan}-l, --local${reset}               Install locally (to ./.qwen/ in current directory)
+    ${cyan}-g, --global${reset}              Install commands globally (to ~/.qwen)
+    ${cyan}-l, --local${reset}               Install commands locally (to ./.qwen)
+    ${cyan}-w, --workspace${reset}           Install workspace layer (.base/ in current directory)
     ${cyan}-c, --config-dir <path>${reset}   Specify custom Qwen config directory
     ${cyan}-h, --help${reset}                Show this help message
 
   ${yellow}Examples:${reset}
-    ${dim}# Install globally (recommended)${reset}
+    ${dim}# Full install: global commands + workspace layer${reset}
+    npx qwen-base --global --workspace
+
+    ${dim}# Global commands only${reset}
     npx qwen-base --global
 
+    ${dim}# Workspace layer only${reset}
+    npx qwen-base --workspace
+
     ${dim}# Install to current project only${reset}
-    npx qwen-base --local
+    npx qwen-base --local --workspace
 
   ${yellow}What gets installed:${reset}
-    ${cyan}commands/qwen-base/${reset}       11 slash commands
-    ${cyan}base/                            Framework (core, transform, domains, schemas, rules, tools)
-    ${cyan}.mcp.json                        base-mcp server registration
+    ${cyan}Commands (--global or --local):${reset}
+      commands/qwen-base/  - 15 slash commands + orientation
+      base/                - Framework (tasks, templates, context, frameworks)
+
+    ${cyan}Workspace (--workspace):${reset}
+      .base/data/          - JSON data surfaces
+      .base/hooks/         - 8 Python hooks
+      .base/base-mcp/      - MCP server
+      .base/schemas/       - JSON validation schemas
+      .base/grooming/      - Weekly groom reports
+      .base/audits/        - Audit history
+      .base/workspace.json - Workspace manifest
+      .base/operator.json  - Operator profile
+      .mcp.json            - MCP server registration
 `);
   process.exit(0);
 }
 
-function install(isGlobal) {
+function installCommands(isGlobal) {
   const src = path.join(__dirname, '..');
   const configDir = expandTilde(explicitConfigDir) || expandTilde(process.env.QWEN_CONFIG_DIR);
   const globalDir = configDir || path.join(os.homedir(), '.qwen');
   const qwenDir = isGlobal ? globalDir : path.join(process.cwd(), '.qwen');
-  const baseDest = path.join(qwenDir, 'base');
   const cmdsDest = path.join(qwenDir, 'commands', 'qwen-base');
-  const workspaceRoot = isGlobal ? os.homedir() : process.cwd();
+  const baseDest = path.join(qwenDir, 'base');
 
   const locationLabel = isGlobal
     ? qwenDir.replace(os.homedir(), '~')
@@ -136,67 +140,132 @@ function install(isGlobal) {
 
   console.log(`  Installing to ${cyan}${locationLabel}${reset}\n`);
 
-  // Copy framework (src/ → base/)
-  if (fs.existsSync(path.join(src, 'src'))) {
-    copyDir(path.join(src, 'src'), baseDest);
-    console.log(`  ${green}+${reset} base/ ${dim}(${countFiles(baseDest)} framework files)${reset}`);
+  // Copy framework
+  if (fs.existsSync(path.join(src, 'src', 'framework'))) {
+    copyDir(path.join(src, 'src', 'framework'), path.join(baseDest, 'framework'));
   }
-
   // Copy commands
   if (fs.existsSync(path.join(src, 'src', 'commands'))) {
-    fs.mkdirSync(cmdsDest, { recursive: true });
     copyDir(path.join(src, 'src', 'commands'), cmdsDest);
-    console.log(`  ${green}+${reset} commands/qwen-base/ ${dim}(${countFiles(cmdsDest)} commands)${reset}`);
+    console.log(`  ${green}+${reset} commands/qwen-base/ (${countFiles(cmdsDest)} commands)`);
+  }
+  // Copy skill entry point
+  if (fs.existsSync(path.join(src, 'src', 'skill'))) {
+    copyDir(path.join(src, 'src', 'skill'), path.join(baseDest, 'skill'));
+  }
+  // Copy hooks to framework
+  if (fs.existsSync(path.join(src, 'src', 'hooks'))) {
+    const hooksDest = path.join(baseDest, 'framework', 'hooks');
+    copyDir(path.join(src, 'src', 'hooks'), hooksDest);
+  }
+  // Copy MCP package sources
+  if (fs.existsSync(path.join(src, 'src', 'packages', 'base-mcp'))) {
+    const mcpDest = path.join(baseDest, 'framework', 'packages', 'base-mcp');
+    copyDir(path.join(src, 'src', 'packages', 'base-mcp'), mcpDest);
+  }
+  console.log(`  ${green}+${reset} base/ (framework files)`);
+  console.log('');
+}
+
+function installWorkspace() {
+  const src = path.join(__dirname, '..');
+  const workspaceDir = process.cwd();
+  const baseDir = path.join(workspaceDir, '.base');
+
+  console.log(`  Installing workspace layer to ${cyan}${baseDir.replace(os.homedir(), '~')}${reset}\n`);
+
+  // Create directories
+  for (const dir of ['data', 'hooks', 'grooming', 'audits', 'schemas']) {
+    fs.mkdirSync(path.join(baseDir, dir), { recursive: true });
+  }
+  console.log(`  ${green}+${reset} .base/data/`);
+  console.log(`  ${green}+${reset} .base/hooks/`);
+  console.log(`  ${green}+${reset} .base/grooming/`);
+  console.log(`  ${green}+${reset} .base/audits/`);
+  console.log(`  ${green}+${reset} .base/schemas/`);
+
+  // Initialize JSON data surfaces
+  const dataSurfaces = {
+    'projects.json': { version: 1, workspace: '', last_modified: null, categories: [], items: [], archived: [] },
+    'entities.json': { entities: [], last_updated: null },
+    'state.json': { drift_score: 0, areas: {}, last_groom: null, last_updated: null },
+    'psmm.json': { sessions: {} },
+    'staging.json': { proposals: [] }
+  };
+  let surfaceCount = 0;
+  for (const [filename, data] of Object.entries(dataSurfaces)) {
+    if (!fs.existsSync(path.join(baseDir, 'data', filename))) {
+      fs.writeFileSync(path.join(baseDir, 'data', filename), JSON.stringify(data, null, 2));
+      surfaceCount++;
+    }
+  }
+  if (surfaceCount > 0) {
+    console.log(`  ${green}+${reset} .base/data/ (${surfaceCount} JSON surfaces initialized)`);
   }
 
-  // Wire BASE MCP server into .mcp.json
-  const mcpIndexPath = path.join(baseDest, 'packages', 'base-mcp', 'index.js');
-  if (fs.existsSync(mcpIndexPath)) {
-    wireMcp(workspaceRoot, mcpIndexPath);
-    console.log(`  ${green}+${reset} Wired base-mcp in .mcp.json`);
+  // Copy workspace.json template
+  const workspaceJsonSrc = path.join(src, 'src', 'templates', 'workspace.json');
+  if (!fs.existsSync(path.join(baseDir, 'workspace.json')) && fs.existsSync(workspaceJsonSrc)) {
+    const template = JSON.parse(fs.readFileSync(workspaceJsonSrc, 'utf-8'));
+    template.workspace = path.basename(workspaceDir);
+    template.created = new Date().toISOString().split('T')[0];
+    fs.writeFileSync(path.join(baseDir, 'workspace.json'), JSON.stringify(template, null, 2));
+    console.log(`  ${green}+${reset} .base/workspace.json (manifest)`);
+  }
 
-    // Install MCP dependencies
-    const mcpDir = path.join(baseDest, 'packages', 'base-mcp');
+  // Copy operator.json
+  const operatorSrc = path.join(src, 'src', 'templates', 'operator.json');
+  if (!fs.existsSync(path.join(baseDir, 'operator.json')) && fs.existsSync(operatorSrc)) {
+    fs.copyFileSync(operatorSrc, path.join(baseDir, 'operator.json'));
+    console.log(`  ${green}+${reset} .base/operator.json (operator profile)`);
+  }
+
+  // Copy schemas
+  const schemasSrc = path.join(src, 'src', 'schemas');
+  if (fs.existsSync(schemasSrc)) {
+    const files = fs.readdirSync(schemasSrc).filter(f => f.endsWith('.json'));
+    for (const f of files) {
+      fs.copyFileSync(path.join(schemasSrc, f), path.join(baseDir, 'schemas', f));
+    }
+    console.log(`  ${green}+${reset} .base/schemas/ (${files.length} validation schemas)`);
+  }
+
+  // Copy hooks
+  const hooksSrc = path.join(src, 'src', 'hooks');
+  if (fs.existsSync(hooksSrc)) {
+    const hookFiles = fs.readdirSync(hooksSrc).filter(f => f.endsWith('.py'));
+    for (const f of hookFiles) {
+      fs.copyFileSync(path.join(hooksSrc, f), path.join(baseDir, 'hooks', f));
+    }
+    console.log(`  ${green}+${reset} .base/hooks/ (${hookFiles.length} hooks)`);
+  }
+
+  // Copy base-mcp
+  const mcpSrc = path.join(src, 'src', 'packages', 'base-mcp');
+  const mcpDest = path.join(baseDir, 'base-mcp');
+  if (fs.existsSync(mcpSrc)) {
+    copyDir(mcpSrc, mcpDest);
+    console.log(`  ${green}+${reset} .base/base-mcp/`);
     try {
-      execSync('npm install --production --silent', { cwd: mcpDir, stdio: 'pipe' });
-      console.log(`  ${green}+${reset} MCP dependencies installed`);
+      execSync('npm install --production --silent', { cwd: mcpDest, stdio: 'pipe' });
+      console.log(`  ${green}+${reset} base-mcp dependencies installed`);
     } catch (e) {
-      console.log(`  ${yellow}!${reset} MCP deps install failed — run cd ${mcpDir} && npm install${reset}`);
+      console.log(`  ${yellow}!${reset} base-mcp npm install failed — run cd .base/base-mcp && npm install${reset}`);
     }
   }
 
-  // Wire BASE Python hooks into settings.json
-  const settingsPath = path.join(qwenDir, 'settings.json');
-  let settings = {};
-  if (fs.existsSync(settingsPath)) {
-    try { settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8')); } catch (e) {}
+  // Register MCP in .mcp.json
+  const mcpJsonPath = path.join(workspaceDir, '.mcp.json');
+  let mcpConfig = {};
+  if (fs.existsSync(mcpJsonPath)) {
+    try { mcpConfig = JSON.parse(fs.readFileSync(mcpJsonPath, 'utf-8')); } catch (e) {}
   }
-  if (!settings.hooks) settings.hooks = {};
+  if (!mcpConfig.mcpServers) mcpConfig.mcpServers = {};
+  mcpConfig.mcpServers['base-mcp'] = { type: 'stdio', command: 'node', args: ['./.base/base-mcp/index.js'] };
+  fs.writeFileSync(mcpJsonPath, JSON.stringify(mcpConfig, null, 2));
+  console.log(`  ${green}+${reset} .mcp.json (base-mcp registered)`);
 
-  const hookFiles = [
-    { event: 'UserPromptSubmit', file: 'base-pulse-check.py' },
-    { event: 'UserPromptSubmit', file: 'psmm-injector.py' },
-    { event: 'SessionStart', file: 'satellite-detection.py' },
-  ];
-
-  for (const hook of hookFiles) {
-    const hookPath = path.join(baseDest, 'hooks', hook.file).replace(/\\/g, '/');
-    const hookCommand = `python3 ${hookPath}`;
-    if (!settings.hooks[hook.event]) settings.hooks[hook.event] = [];
-    const exists = settings.hooks[hook.event].some(h =>
-      (h.command && h.command.includes(hook.file)) ||
-      (h.hooks && h.hooks.some(i => i.command && i.command.includes(hook.file)))
-    );
-    if (!exists) {
-      settings.hooks[hook.event].push({ hooks: [{ type: 'command', command: hookCommand }] });
-    }
-  }
-  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
-  console.log(`  ${green}+${reset} Wired BASE hooks in settings.json`);
-
-  console.log(`
-  ${green}Done!${reset} Open Qwen Code and type ${cyan}/base${reset} to start.
-`);
+  console.log(`\n  ${green}Workspace layer installed.${reset}\n`);
 }
 
 function promptLocation() {
@@ -206,28 +275,30 @@ function promptLocation() {
   const globalPath = configDir || path.join(os.homedir(), '.qwen');
   const globalLabel = globalPath.replace(os.homedir(), '~');
 
-  console.log(`  ${yellow}Where would you like to install?${reset}
+  console.log(`  ${yellow}What would you like to install?${reset}
 
-  ${cyan}1${reset}) Global ${dim}(${globalLabel})${reset} - available in all projects
-  ${cyan}2${reset}) Local  ${dim}(./.qwen)${reset} - this project only
+  ${cyan}1${reset}) Full install  ${dim}(commands to ${globalLabel} + workspace layer to .base/)${reset}
+  ${cyan}2${reset}) Commands only  ${dim}(${globalLabel})${reset}
+  ${cyan}3${reset}) Workspace only ${dim}(.base/ in current directory)${reset}
 `);
 
   rl.question(`  Choice ${dim}[1]${reset}: `, (answer) => {
     rl.close();
-    install(answer.trim() !== '2');
+    const choice = answer.trim() || '1';
+    if (choice === '1' || choice === '2') installCommands(true);
+    if (choice === '1' || choice === '3') installWorkspace();
+    if (!['1','2','3'].includes(choice)) { installCommands(true); installWorkspace(); }
+    console.log(`  ${green}Done!${reset} Open Qwen Code and type ${cyan}/base${reset} to start.\n`);
   });
 }
 
 if (hasGlobal && hasLocal) {
   console.error(`  ${yellow}Cannot specify both --global and --local${reset}`);
   process.exit(1);
-} else if (explicitConfigDir && hasLocal) {
-  console.error(`  ${yellow}Cannot use --config-dir with --local${reset}`);
-  process.exit(1);
-} else if (hasGlobal) {
-  install(true);
-} else if (hasLocal) {
-  install(false);
+} else if (hasGlobal || hasLocal || hasWorkspace) {
+  if (hasGlobal || hasLocal) installCommands(hasGlobal);
+  if (hasWorkspace) installWorkspace();
+  console.log(`  ${green}Done!${reset} Open Qwen Code and type ${cyan}/base${reset} to start.\n`);
 } else {
   promptLocation();
 }

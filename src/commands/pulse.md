@@ -11,8 +11,8 @@ Workspace health briefing — drift score, stale areas, overdue grooming, quick 
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/tasks/pulse.md}
-@{~/.qwen/commands/qwen-base/context/base-principles.md}
+@{~/.qwen/base/framework/tasks/pulse.md}
+@{~/.qwen/base/framework/context/base-principles.md}
 </execution_context>
 
 <context>
@@ -23,7 +23,7 @@ $ARGUMENTS
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/tasks/pulse.md}
+Follow task: @{~/.qwen/base/framework/tasks/pulse.md}
 </process>
 
 <success_criteria>

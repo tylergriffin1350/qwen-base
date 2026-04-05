@@ -11,8 +11,8 @@ Audit all .qwen/ directories in this workspace. Discover sprawl, classify items 
 </objective>
 
 <execution_context>
-@{~/.qwen/commands/qwen-base/framework/}tasks/audit-QWEN.md
-@{~/.qwen/commands/qwen-base/framework/}frameworks/qwen-config-alignment.md
+@{~/.qwen/base/framework/}tasks/audit-QWEN.md
+@{~/.qwen/base/framework/}frameworks/qwen-config-alignment.md
 </execution_context>
 
 <context>
@@ -23,7 +23,7 @@ Workspace root config: .qwen/
 </context>
 
 <process>
-Follow task: @{~/.qwen/commands/qwen-base/framework/}tasks/audit-QWEN.md
+Follow task: @{~/.qwen/base/framework/}tasks/audit-QWEN.md
 
 The framework file defines classification rules, safety protocol, and output format.
 The task file defines the step-by-step process.
