@@ -102,7 +102,7 @@ if (hasHelp) {
 
   ${yellow}What gets installed:${reset}
     ${cyan}Commands (--global or --local):${reset}
-      commands/qwen-base/  - 15 slash commands + orientation
+      commands/base/         - 15 slash commands + orientation
       base/                - Framework (tasks, templates, context, frameworks)
 
     ${cyan}Workspace (--workspace):${reset}
@@ -124,7 +124,7 @@ function installCommands(isGlobal) {
   const configDir = expandTilde(explicitConfigDir) || expandTilde(process.env.QWEN_CONFIG_DIR);
   const globalDir = configDir || path.join(os.homedir(), '.qwen');
   const qwenDir = isGlobal ? globalDir : path.join(process.cwd(), '.qwen');
-  const cmdsDest = path.join(qwenDir, 'commands', 'qwen-base');
+  const cmdsDest = path.join(qwenDir, 'commands', 'base');
   const baseDest = path.join(qwenDir, 'base');
 
   const locationLabel = isGlobal
@@ -147,7 +147,7 @@ function installCommands(isGlobal) {
   // Copy commands
   if (fs.existsSync(path.join(src, 'src', 'commands'))) {
     copyDir(path.join(src, 'src', 'commands'), cmdsDest);
-    console.log(`  ${green}+${reset} commands/qwen-base/ (${countFiles(cmdsDest)} commands)`);
+    console.log(`  ${green}+${reset} commands/base/ (${countFiles(cmdsDest)} commands)`);
   }
   // Copy skill entry point
   if (fs.existsSync(path.join(src, 'src', 'skill'))) {
